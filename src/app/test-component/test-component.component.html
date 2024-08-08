@@ -1,0 +1,54 @@
+<ng-select
+  placeholder="Select some items"
+  [items]="visibleItems"
+  bindLabel="name"
+  bindValue="id"
+  [(ngModel)]="selectedItem"
+  (open)="onOpen()"
+  (close)="onClose()"
+  (focus)="onFocus($event)"
+  (search)="onSearch($event)"
+  (blur)="onBlur($event)"
+  (clear)="onClear()"
+  (add)="onAdd($event)"
+  (scrollToEnd)="onScrollToEnd($event)"
+  (remove)="onRemove($event)"
+  (change)="onChange($event)"
+  [trackByFn]="trackByFn"
+>
+  <ng-template ng-option-tmp let-item="item" let-index="index">
+    <div
+      *ngIf="
+        visibleItems.indexOf(item) === index && hasChildren(index);
+        else normalOption
+      "
+      class="hierarchical-option"
+    >
+      <button (click)="debounceToggleCollapse(index, $event)">
+        {{ isExpanded(item) ? "Collapse" : "Expand" }}
+      </button>
+      <span (click)="debounceToggleCollapse(index, $event)">
+        {{ item.name }}
+      </span>
+    </div>
+    <ng-template #normalOption>
+      <span [style.padding-left.px]="item.level * 24">{{ item.name }}</span>
+    </ng-template>
+  </ng-template>
+</ng-select>
+
+@if (events.length > 0) {
+<div>
+  <br />
+  <button (click)="events = []" class="btn btn-secondary btn-sm">
+    Clear events
+  </button>
+  <br />
+  <br />
+</div>
+} @for (event of events; track event) {
+<div>
+  <small>{{ event.name }} - {{ event.value | json }}</small>
+  <hr />
+</div>
+}
