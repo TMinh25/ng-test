@@ -1,6 +1,13 @@
+<style>
+  ng-dropdown-panel {
+    height: 500px;
+  }
+</style>
+
 <ng-select
   placeholder="Select some items"
   [items]="visibleItems"
+  class="tree-select"
   bindLabel="name"
   bindValue="id"
   [(ngModel)]="selectedItem"
@@ -16,17 +23,16 @@
   (change)="onChange($event)"
   [trackByFn]="trackByFn"
 >
-  <ng-template ng-option-tmp let-item="item" let-index="index">
+  <ng-template
+    ng-option-tmp
+    let-item="item"
+    let-index="index"
+    class="hierarchical-option"
+  >
     <div
-      *ngIf="
-        visibleItems.indexOf(item) === index && hasChildren(index);
-        else normalOption
-      "
-      class="hierarchical-option"
+      [style.padding-left.px]="item.level * 24"
+      *ngIf="hasChildren(item); else normalOption"
     >
-      <button (click)="debounceToggleCollapse(index, $event)">
-        {{ isExpanded(item) ? "Collapse" : "Expand" }}
-      </button>
       <span (click)="debounceToggleCollapse(index, $event)">
         {{ item.name }}
       </span>
